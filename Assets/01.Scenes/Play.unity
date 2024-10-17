@@ -2596,8 +2596,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a36f61546cb7d9e41aec1ea9ac5dccea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gunTr: {fileID: 1386548281}
   moveSpeed: 10
-  turnSpeed: 20
+  turnSpeed: 2
   initHp: 300
   currHp: 0
 --- !u!4 &1758538578 stripped

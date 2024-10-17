@@ -6,9 +6,10 @@ using UnityEngine.UI;
 public class PlayerCtrl : MonoBehaviour
 {
     private Transform tr;
+    public Transform gunTr;
     private Animation anim;
-    public float moveSpeed = 10f;
-    public float turnSpeed = 40f;
+    public float moveSpeed = 5f;
+    public float turnSpeed = 2f;
 
     public float initHp = 300f;
     public float currHp;
@@ -66,6 +67,8 @@ public class PlayerCtrl : MonoBehaviour
                 {
                     // 적의 위치로 회전
                     RotatePlayerTowards(hit.point);
+                    // 총구가 적을 정확히 향하게 회전
+                    RotateGunTowards(hit.point);
                 }
             }
         }
@@ -104,9 +107,22 @@ public class PlayerCtrl : MonoBehaviour
         Quaternion targetRotation = Quaternion.LookRotation(direction);
 
         // 부드럽게 회전 (Lerp 사용)
-        // tr.rotation = Quaternion.Lerp(tr.rotation, targetRotation, Time.deltaTime * turnSpeed);
+        tr.rotation = Quaternion.Lerp(tr.rotation, targetRotation, Time.deltaTime * turnSpeed);
         // 즉시 회전
-        tr.rotation = targetRotation;
+        // tr.rotation = targetRotation;
+    }
+
+    void RotateGunTowards(Vector3 targetPosition)
+    {
+        // 총구가 적을 향하도록 회전
+        Vector3 direction = (targetPosition - gunTr.position).normalized;
+        Quaternion targetRotation = Quaternion.LookRotation(direction);
+
+        // 부드럽게 회전 (Lerp 사용)
+        gunTr.rotation = Quaternion.Lerp(gunTr.rotation, targetRotation, Time.deltaTime * turnSpeed);
+
+        // 총구는 바로 회전
+        // gunTr.rotation = targetRotation;
     }
 
     void PlayerAnim(float h, float v){
