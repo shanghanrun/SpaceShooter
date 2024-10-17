@@ -2597,7 +2597,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 10
-  turnSpeed: 80
+  turnSpeed: 20
   initHp: 300
   currHp: 0
 --- !u!4 &1758538578 stripped

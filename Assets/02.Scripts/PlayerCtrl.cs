@@ -8,7 +8,7 @@ public class PlayerCtrl : MonoBehaviour
     private Transform tr;
     private Animation anim;
     public float moveSpeed = 10f;
-    public float turnSpeed = 80f;
+    public float turnSpeed = 40f;
 
     public float initHp = 300f;
     public float currHp;
@@ -51,6 +51,24 @@ public class PlayerCtrl : MonoBehaviour
 
     void Update()
     {
+
+        // 마우스 왼쪽 버튼을 클릭했을 때
+        if (Input.GetMouseButtonDown(0))
+        {
+            // 마우스 위치에서 레이캐스트 발사
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit, 100f))
+            {
+                // 적 태그가 있는 오브젝트에 클릭했는지 확인
+                if (hit.transform.CompareTag("Monster"))
+                {
+                    // 적의 위치로 회전
+                    RotatePlayerTowards(hit.point);
+                }
+            }
+        }
         // 마우스 커서를 화면 중앙에 고정
         // Cursor.lockState = CursorLockMode.Locked;
         // 마우스 커서를 게임 윈도우 내에 제한
@@ -71,31 +89,26 @@ public class PlayerCtrl : MonoBehaviour
         // 마우스 이동량을 기반으로 캐릭터 회전 처리
         tr.Rotate(Vector3.up * Time.deltaTime * turnSpeed * r);
 
-        // E 키를 눌렀을 때 커서를 화면 중앙으로 이동
-        if (Input.GetKey(KeyCode.E))
-        {
-            CenterCursor();
-        }
-
-
+        
         PlayerAnim(h,v);
 
-        // //! 마우스 좌클릭으로 총 발사 시 커서 위치 업데이트
-        // if (Input.GetMouseButtonDown(0)) // 좌클릭
-        // {
-        //     Shoot(); // 총 발사 메소드 호출
-        // }
     }
-    void CenterCursor()
-    {
-        // 화면 중앙 좌표 계산
-        Vector3 screenCenter = new Vector3(Screen.width / 2, Screen.height / 2, 0);
 
-        // 마우스 커서를 화면 중앙으로 고정
-        Cursor.lockState = CursorLockMode.None;  // 커서를 해제
-        Cursor.visible = true;                   // 커서를 보이게
-        Cursor.SetCursor(null, screenCenter, CursorMode.Auto);  // 커서 위치를 중앙으로 설정
+    void RotatePlayerTowards(Vector3 targetPosition)
+    {
+        // 타겟 위치와 플레이어의 현재 위치를 기반으로 방향 벡터 계산
+        Vector3 direction = (targetPosition - tr.position).normalized;
+        direction.y = 0; // 플레이어가 수평으로만 회전하게 하기 위해 Y축은 고정
+
+        // 타겟 방향으로의 회전 계산
+        Quaternion targetRotation = Quaternion.LookRotation(direction);
+
+        // 부드럽게 회전 (Lerp 사용)
+        // tr.rotation = Quaternion.Lerp(tr.rotation, targetRotation, Time.deltaTime * turnSpeed);
+        // 즉시 회전
+        tr.rotation = targetRotation;
     }
+
     void PlayerAnim(float h, float v){
         if(v >=0.1f){
             anim.CrossFade("RunF", 0.25f); //전진 
