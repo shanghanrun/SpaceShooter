@@ -1,3 +1,7 @@
 /Builds.framework.js.gz
   Content-Encoding: gzip
   Content-Type: application/javascript
+
+/Builds.framework.js.br
+  Content-Encoding: br
+  Content-Type: application/javascript
